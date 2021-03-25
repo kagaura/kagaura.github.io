@@ -1,0 +1,45 @@
+<?php
+$fp = fopen('data.csv', 'a+b');
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    fputcsv($fp, [$_POST['name'], $_POST['comment']]);
+    rewind($fp);
+    header("Location:加賀中裏サイト.php");
+    exit;
+}
+while ($row = fgetcsv($fp)) {
+    $rows[] = $row;
+}
+fclose($fp);
+?>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link href="加賀裏.css" rel="stylesheet" type="text/css" media="all">
+<title>加賀中裏サイト(なぞ)</title>
+</head>
+<body>
+<body bgcolor="#000000" text="#ffffff">
+<h1>加賀中裏サイト(なぞ)</h1>
+<section>
+    <h2>投稿(サイト主の気まぐれでたまに投稿リセットされます)</h2>
+    <form action="" method="post">
+        <div class="name"><span class="label">名前(非公開):</span><input type="text" name="name" value=""></div>
+        <div class="honbun"><span class="label">本文:</span><textarea name="comment" cols="30" rows="3" maxlength="100" wrap="hard" placeholder="100字以内で入力してください。"></textarea></div>
+        <input type="submit" value="投稿">
+    </form>
+</section>
+<section class="toukou">
+    <h2>投稿一覧</h2>
+ <?php if (!empty($rows)): ?>
+    <ul>
+<?php foreach ($rows as $row): ?>
+        <li><?=$row[1]?> </li>
+<?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <p>投稿まだないゾ</p>
+<?php endif; ?>
+</section>
+</body>
+</html>
